@@ -21,7 +21,7 @@ body {
 
 /* En-tête */
 header {
-    background: url('images/ecoride-banner.jpg') no-repeat center top;
+    background: url('../assets/images/ecoride-banner.jpg') no-repeat center top;
     background-size: cover; /* Ajuste l'image pour couvrir toute la zone */
     background-position: center 50%; /* Remonte l'image */
     height: 450px; /* Augmente encore la hauteur pour voir plus d'image */
