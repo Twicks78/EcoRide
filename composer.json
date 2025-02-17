@@ -1,0 +1,9 @@
+{
+    "name": "ecoride/api",
+    "description": "API pour EcoRide",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "firebase/php-jwt": "^6.11"
+    }
+}
