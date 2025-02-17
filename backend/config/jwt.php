@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../vendor/autoload.php"; // Charger les dépendances Composer
+require_once __DIR__ . "/../../vendor/autoload.php"; // Charger Composer
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -10,12 +10,11 @@ class JWTHandler {
 
     public static function generateToken($user_id) {
         $payload = [
-            "iss" => "EcoRide", // Émetteur du token
-            "iat" => time(), // Date d'émission
-            "exp" => time() + 3600, // Expiration (1 heure)
+            "iss" => "EcoRide",
+            "iat" => time(),
+            "exp" => time() + 3600, // Expire après 1 heure
             "user_id" => $user_id
         ];
-
         return JWT::encode($payload, self::$secret_key, self::$algorithm);
     }
 
@@ -24,7 +23,7 @@ class JWTHandler {
             $decoded = JWT::decode($token, new Key(self::$secret_key, self::$algorithm));
             return $decoded->user_id;
         } catch (Exception $e) {
-            return null; // Token invalide
+            return null;
         }
     }
 }

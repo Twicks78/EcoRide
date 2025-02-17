@@ -1,4 +1,21 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+require_once "../config/database.php";
+require_once "../config/jwt.php"; // 🔹 Importer JWT
+
+
+
+// Fonction pour récupérer l'user_id depuis le token JWT
+function getUserFromToken() {
+    $headers = getallheaders();
+    if (isset($headers['Authorization'])) {
+        $token = str_replace("Bearer ", "", $headers['Authorization']);
+        return JWTHandler::validateToken($token);
+    }
+    return null;
+}
+
 require_once "../config/database.php";
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -85,16 +102,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
     }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['action']) && $_GET['action'] === 'updateRide') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    error_log("Données reçues : " . json_encode($data)); // Debug: afficher les données reçues
+    $data = json_decode(file_get_contents("php://input"));
+    $user_id = getUserFromToken(); // 🔐 Vérifier le token
 
-
-    if (!empty($data->ride_id) && !empty($data->user_id) && !empty($data->depart) && !empty($data->arrivee) && !empty($data->prix) && !empty($data->places_disponibles)) {
-        // Vérifier si le trajet appartient bien au chauffeur
+    if ($user_id && !empty($data->ride_id) && !empty($data->depart) && !empty($data->arrivee) && !empty($data->prix) && !empty($data->places_disponibles)) {
+        // Vérifier si le trajet appartient bien à l'utilisateur connecté
         $query = "SELECT id FROM rides WHERE id = :ride_id AND user_id = :user_id";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(":ride_id", $data->ride_id);
-        $stmt->bindParam(":user_id", $data->user_id);
+        $stmt->bindParam(":user_id", $user_id);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
@@ -106,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['action']) && $_GET['act
             $stmt->bindParam(":prix", $data->prix);
             $stmt->bindParam(":places_disponibles", $data->places_disponibles);
             $stmt->bindParam(":ride_id", $data->ride_id);
-            $stmt->bindParam(":user_id", $data->user_id);
+            $stmt->bindParam(":user_id", $user_id);
 
             if ($stmt->execute()) {
                 echo json_encode(["message" => "Trajet mis à jour avec succès"]);
@@ -114,12 +130,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT' && isset($_GET['action']) && $_GET['act
                 echo json_encode(["message" => "Erreur lors de la mise à jour"]);
             }
         } else {
-            echo json_encode(["message" => "Aucun trajet trouvé ou vous n'êtes pas le propriétaire"]);
+            echo json_encode(["message" => "Accès refusé : Vous n'êtes pas propriétaire du trajet"]);
         }
     } else {
-        echo json_encode(["message" => "Données incomplètes"]);
+        echo json_encode(["message" => "Accès refusé ou données incomplètes"]);
     }
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_GET['action']) && $_GET['action'] === 'deleteRide') {
     $data = json_decode(file_get_contents("php://input"), true);
     error_log("Données reçues : " . json_encode($data)); // Debug: afficher les données reçues
