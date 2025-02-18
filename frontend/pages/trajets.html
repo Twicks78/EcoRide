@@ -1,0 +1,13 @@
+<section class="trajets">
+    <h2>Liste des trajets disponibles</h2>
+    <ul id="trajets-list"></ul>
+</section>
+<script>
+fetch("http://localhost/backend/routes/rides.php?action=liste")
+    .then(response => response.json())
+    .then(data => {
+        let list = document.getElementById("trajets-list");
+        list.innerHTML = data.map(trajet => `<li>${trajet.depart} → ${trajet.arrivee} - ${trajet.prix}€</li>`).join("");
+    })
+    .catch(error => console.error("Erreur chargement trajets :", error));
+</script>
