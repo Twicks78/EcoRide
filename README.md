@@ -1,135 +1,60 @@
-README.md pour EcoRide
-markdown
-Copier
-# 🚗 EcoRide - Plateforme de Covoiturage Écologique 🌱
+API pour la plateforme de covoiturage **EcoRide**.
 
-## 📖 Description
-**EcoRide** est une plateforme de covoiturage qui permet aux utilisateurs de proposer et réserver des trajets en voiture. L’objectif est de **réduire l’impact environnemental** des déplacements en encourageant l’utilisation de véhicules partagés.
+## 📌 Prérequis
 
-Cette API permet :
-- 🔐 **Inscription et connexion avec JWT**
-- 🚗 **Ajout, modification et suppression de trajets**
-- 🛒 **Réservation de trajets**
-- 📊 **Historique des trajets et système de crédits**
+Avant de lancer l'API, assurez-vous d'avoir installé :
 
----
+- **PHP 8+** (avec `pdo_mysql` activé)
+- **MySQL ou MariaDB** (base de données)
+- **Apache ou Nginx**
+- **Composer** (gestionnaire de dépendances PHP)
 
-## 🏗️ **Installation et Configuration**
-### 📌 **1. Cloner le projet**
-```sh
+## 🚀 Installation
+
+1️⃣ **Clonez le projet :**
+
 git clone https://github.com/Twicks78/EcoRide.git
-cd EcoRide
-📌 2. Installer les dépendances
-Assure-toi d’avoir Composer installé, puis exécute :
+cd EcoRide/backend
+
+2️⃣ **Installez les dépendances PHP :**
 
 composer install
 
-📌 3. Configurer la base de données
-Crée une base de données ecoride dans MySQL.
-Exécute le fichier SQL de création des tables :
+3️⃣ **Configurez votre base de données :**
+- Importez le fichier `database.sql` dans MySQL.
+- Configurez `backend/config/database.php` avec vos identifiants.
 
-mysql -u root -p ecoride < database/schema.sql
+4️⃣ **Lancez le serveur PHP (si vous n'avez pas Apache) :**
 
-Configure la connexion à la base dans backend/config/database.php :
+php -S localhost:3000 -t backend
 
-$host = "localhost";
-$db_name = "ecoride";
-$username = "root";
-$password = "";
+5️⃣ **Testez l'API avec Postman ou cURL :**
 
-🚀 Utilisation de l’API
-🔐 1. Inscription d’un utilisateur
-Méthode : POST
-URL : /backend/routes/users.php?action=register
-Body JSON :
-json
-Copier
-{
-    "pseudo": "JohnDoe",
-    "email": "johndoe@email.com",
-    "password": "123456"
-}
-Réponse :
-json
-Copier
-{"message": "Inscription réussie"}
-🔑 2. Connexion et Génération du Token JWT
-Méthode : POST
-URL : /backend/routes/users.php?action=login
-Body JSON :
-json
-Copier
-{
-    "email": "johndoe@email.com",
-    "password": "123456"
-}
-Réponse :
-json
-Copier
-{
-    "message": "Connexion réussie",
-    "token": "eyJhbGciOiJIUzI1..."
-}
-📌 Utilise ce token JWT pour les autres requêtes protégées.
+curl -X POST http://localhost:3000/routes/users.php?action=register -d '{"pseudo":"test","email":"test@example.com","password":"123456"}' -H "Content-Type: application/json"
 
-🚗 3. Ajouter un trajet (🚫 Authentification requise)
-Méthode : POST
-URL : /backend/routes/rides.php?action=addRide
-Headers :
-makefile
-Copier
-Authorization: Bearer <TON_TOKEN>
-Body JSON :
-json
-Copier
-{
-    "depart": "Paris",
-    "arrivee": "Lyon",
-    "prix": 25,
-    "places_disponibles": 3
-}
-Réponse :
-json
-Copier
-{"message": "Trajet ajouté avec succès"}
-📝 4. Voir ses trajets
-Méthode : GET
-URL : /backend/routes/rides.php?action=myRides
-Headers :
-makefile
-Copier
-Authorization: Bearer <TON_TOKEN>
-Réponse :
-json
-Copier
-[
-    {
-        "id": 1,
-        "depart": "Paris",
-        "arrivee": "Lyon",
-        "prix": 25,
-        "places_disponibles": 3
-    }
-]
-🛠️ Technologies Utilisées
-Back-end : PHP 8, MySQL, MariaDB
-Authentification : JWT (JSON Web Token)
-Déploiement : Fly.io, Heroku, Vercel (en option)
-Gestion des dépendances : Composer
-Tests API : Postman
-🤝 Contribuer
-Les contributions sont les bienvenues ! 🚀
+## 📡 Endpoints API (Exemples)
 
-Fork le projet
-Crée une branche : git checkout -b feature/ma-fonctionnalite
-Commit tes modifications : git commit -m "Ajout d'une nouvelle fonctionnalité"
-Push sur GitHub : git push origin feature/ma-fonctionnalite
-Ouvre une Pull Request
-📜 Licence
-Ce projet est sous licence MIT.
-🔗 Voir la licence
+| Méthode | Endpoint | Description |
+|---------|---------|-------------|
+| `POST`  | `/routes/users.php?action=register` | Inscription utilisateur |
+| `POST`  | `/routes/users.php?action=login` | Connexion utilisateur |
+| `GET`   | `/routes/rides.php` | Voir tous les trajets |
+| `POST`  | `/routes/rides.php?action=create` | Créer un trajet |
 
-✨ Auteur
-👤 Twicks_78
-📧 Contact : deoliveiracyril@gmail.com
-🔗 GitHub : Twicks78
+## 📌 Déploiement sur Fly.io
+
+1️⃣ **Connectez-vous à Fly.io :**
+
+flyctl auth login
+
+2️⃣ **Lancez le déploiement :**
+
+flyctl launch
+flyctl deploy
+
+3️⃣ **Accédez à votre API en ligne 🚀 :**
+
+https://ecoride.fly.dev
+
+💡 **Contact & Support**  
+Si vous avez un problème, ouvrez une **issue** sur GitHub ! 🚀
