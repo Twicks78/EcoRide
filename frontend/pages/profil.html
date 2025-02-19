@@ -1,0 +1,20 @@
+<section class="profil">
+    <h2>Mon Profil</h2>
+    <p><strong>Pseudo :</strong> <span id="profil-pseudo"></span></p>
+    <p><strong>Email :</strong> <span id="profil-email"></span></p>
+</section>
+
+<script>
+fetch("http://localhost/backend/routes/users.php?action=profil", {
+    method: "GET",
+    headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+    }
+})
+.then(response => response.json())
+.then(user => {
+    document.getElementById("profil-pseudo").textContent = user.pseudo;
+    document.getElementById("profil-email").textContent = user.email;
+})
+.catch(error => console.error("Erreur chargement profil :", error));
+</script>

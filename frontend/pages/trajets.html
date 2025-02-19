@@ -1,13 +1,35 @@
 <section class="trajets">
-    <h2>Liste des trajets disponibles</h2>
+    <h2>Liste des trajets</h2>
     <ul id="trajets-list"></ul>
 </section>
+
 <script>
 fetch("http://localhost/backend/routes/rides.php?action=liste")
     .then(response => response.json())
     .then(data => {
         let list = document.getElementById("trajets-list");
-        list.innerHTML = data.map(trajet => `<li>${trajet.depart} → ${trajet.arrivee} - ${trajet.prix}€</li>`).join("");
+        if (data.length > 0) {
+            list.innerHTML = data.map(trajet => 
+                `<li>${trajet.depart} → ${trajet.arrivee} - ${trajet.prix}€ 
+                 <button onclick="reserver(${trajet.id})">Réserver</button></li>`
+            ).join("");
+        } else {
+            list.innerHTML = "<p>Aucun trajet disponible.</p>";
+        }
     })
     .catch(error => console.error("Erreur chargement trajets :", error));
+
+function reserver(trajetId) {
+    fetch("http://localhost/backend/routes/rides.php?action=reserver", {
+        method: "POST",
+        headers: {
+            "Authorization": "Bearer " + localStorage.getItem("token"),
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ ride_id: trajetId })
+    })
+    .then(response => response.json())
+    .then(data => alert(data.message))
+    .catch(error => console.error("Erreur réservation :", error));
+}
 </script>

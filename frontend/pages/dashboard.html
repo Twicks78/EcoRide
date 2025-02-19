@@ -1,0 +1,32 @@
+<section class="dashboard">
+    <h2>Bienvenue sur votre Tableau de Bord</h2>
+    <p><strong>Nom :</strong> <span id="user-name"></span></p>
+    <p><strong>Email :</strong> <span id="user-email"></span></p>
+
+    <h3>Vos trajets réservés</h3>
+    <ul id="historique-list"></ul>
+</section>
+
+<script>
+fetch("http://localhost/backend/routes/users.php?action=profil", {
+    method: "GET",
+    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+})
+.then(response => response.json())
+.then(user => {
+    document.getElementById("user-name").textContent = user.pseudo;
+    document.getElementById("user-email").textContent = user.email;
+});
+
+fetch("http://localhost/backend/routes/rides.php?action=historique", {
+    method: "GET",
+    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+})
+.then(response => response.json())
+.then(data => {
+    let list = document.getElementById("historique-list");
+    list.innerHTML = data.passager.map(trajet => 
+        `<li>${trajet.depart} → ${trajet.arrivee} - ${trajet.prix}€</li>`
+    ).join("");
+});
+</script>

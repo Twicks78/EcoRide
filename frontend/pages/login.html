@@ -6,9 +6,8 @@
         <button type="submit">Se connecter</button>
     </form>
 </section>
+
+<script src="assets/js/auth.js"></script>
 <script>
-document.getElementById("login-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    alert("Connexion en cours...");
-});
+document.getElementById("login-form").addEventListener("submit", login);
 </script>

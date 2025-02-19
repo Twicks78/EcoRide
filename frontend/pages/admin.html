@@ -1,0 +1,20 @@
+<section class="admin">
+    <h2>Statistiques Administrateur</h2>
+    <p><strong>Total trajets :</strong> <span id="total-trajets"></span></p>
+    <p><strong>Total utilisateurs :</strong> <span id="total-users"></span></p>
+</section>
+
+<script>
+fetch("http://localhost/backend/routes/admin.php?action=stats", {
+    method: "GET",
+    headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+    }
+})
+.then(response => response.json())
+.then(data => {
+    document.getElementById("total-trajets").textContent = data.total_trajets;
+    document.getElementById("total-users").textContent = data.total_utilisateurs;
+})
+.catch(error => console.error("Erreur chargement statistiques :", error));
+</script>

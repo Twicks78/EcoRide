@@ -1,0 +1,21 @@
+<section class="historique">
+    <h2>Mon Historique de Trajets</h2>
+    <ul id="historique-list"></ul>
+</section>
+
+<script>
+fetch("http://localhost/backend/routes/rides.php?action=historique", {
+    method: "GET",
+    headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+    }
+})
+.then(response => response.json())
+.then(data => {
+    let list = document.getElementById("historique-list");
+    list.innerHTML = data.passager.map(trajet => 
+        `<li>${trajet.depart} → ${trajet.arrivee} - ${trajet.prix}€</li>`
+    ).join("");
+})
+.catch(error => console.error("Erreur chargement historique :", error));
+</script>

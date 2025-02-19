@@ -1,5 +1,24 @@
 <nav class="navbar">
     <a href="home.html" data-route>Accueil</a>
     <a href="trajets.html" data-route>Trajets</a>
-    <a href="login.html" data-route>Connexion</a>
+    <a href="historique.html" data-route>Historique</a>
+    <a href="profil.html" data-route>Mon Profil</a>
+    <a href="admin.html" data-route id="admin-link" style="display: none;">Admin</a>
+    <a href="register.html" data-route id="register-link">Inscription</a>
+    <a href="login.html" data-route id="login-link">Connexion</a>
+    <a href="#" onclick="logout()" id="logout-link" style="display: none;">Déconnexion</a>
 </nav>
+
+<script src="assets/js/auth.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (isLoggedIn()) {
+        document.getElementById("login-link").style.display = "none";
+        document.getElementById("logout-link").style.display = "inline";
+        document.getElementById("profil-link").style.display = "inline";
+        if (getUserRole() === "admin") {
+            document.getElementById("admin-link").style.display = "inline";
+        }
+    }
+});
+</script>
